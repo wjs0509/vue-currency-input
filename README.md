@@ -1,6 +1,7 @@
 # vue-currency-input
 基于vue+element的金额格式化组件
 
+```html
 <!DOCTYPE html>
 <html lang="en">
 
@@ -10,6 +11,7 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Document</title>
     <script src="https://cdn.jsdelivr.net/npm/vue@2.5.17/dist/vue.js"></script>
+    <!-- <script src="./accounting.js"></script> -->
     <script src="https://cdn.bootcss.com/accounting.js/0.4.1/accounting.js"></script>
     <!-- 引入样式 -->
     <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
@@ -27,6 +29,8 @@
 </body>
 
 </html>
+```
+```javascript
 <script>
     Vue.component("currency-input", {
         template: '\
@@ -105,3 +109,4 @@
         },
     })
 </script>
+```
