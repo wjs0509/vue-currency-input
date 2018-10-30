@@ -22,7 +22,7 @@
 <body>
     <div id="app">
         <div style="display:inline-block">
-            <currency-input v-model="price" :decimal="4" style="width:200px;"></currency-input>
+            <currency-input v-model="price" :decimal="4" style="width:200px;" @blur="inputBlur"></currency-input>
             <el-button type="primary" size="small" @click="cc">提交</el-button>
         </div>
     </div>
@@ -81,6 +81,7 @@
             },
             onBlur() {
                 this.focused = false;
+                this.$emit("blur")
             },
             selectAll(event) {
                 this.focused = true;
@@ -105,6 +106,9 @@
         methods: {
             cc() {
                 console.log(this.price)
+            },
+            inputBlur() {
+                console.log("触发了自定义事件");
             }
         },
     })
