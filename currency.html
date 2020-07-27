@@ -15,6 +15,7 @@
     <script src="https://unpkg.com/element-ui/lib/index.js"></script>
 </head>
 
+<!-- 组件一的封装和使用 -->
 <body>
     <div id="app">
         <div style="display:inline-block">
@@ -123,6 +124,108 @@
             inputBlur() {
                 console.log("触发了自定义事件");
             }
+        },
+    })
+</script>
+
+<!-- 组件二的封装和使用 -->
+<body>
+    <div id="app">
+        <cinput v-model="price"></cinput>
+    </div>
+</body>
+
+<script>
+    Vue.component("currency-input", {
+        template: '<el-input :value="formatValue" v-bind="$attrs" v-on="inputListeners" />',
+        props: {
+            value: {
+                type: [String, Number],
+                default: 0,
+                desc: '数值'
+            },
+            symbol: {
+                type: String,
+                default: '',
+                desc: '货币标识符'
+            },
+            decimal: {
+                type: Number,
+                default: 2,
+                desc: '小数位'
+            }
+        },
+        data() {
+            return {
+                focused: false,
+            }
+        },
+        computed: {
+            formatValue() {
+                if (this.focused) {
+                    return accounting.unformat(this.value);
+                } else {
+                    return this.value
+                      ? accounting.formatMoney(this.value, this.symbol, this.decimal)
+                      : "";
+                }
+            },
+            inputListeners: function() {
+              var vm = this;
+              // `Object.assign` 将所有的对象合并为一个新对象
+              return Object.assign(
+                {},
+                // 我们从父级添加所有的监听器
+                this.$listeners,
+                // // 然后我们添加自定义监听器，
+                // // 或覆写一些监听器的行为
+                {
+                  // 这里确保组件配合 `v-model` 的工作
+                  input: function(event) {
+                    var val = accounting.unformat(event);
+                    vm.$emit("input", val);
+                  },
+                  blur: function(event) {
+                    vm.focused = false;
+                  },
+                  focus: function(event) {
+                    vm.focused = true;
+                  }
+                }
+              );
+            }
+        },
+        methods: {
+            dispatch(componentName, eventName, params) {
+              var parent = this.$parent || this.$root;
+              var name = parent.$options.componentName;
+
+              while (parent && (!name || name !== componentName)) {
+                parent = parent.$parent;
+
+                if (parent) {
+                  name = parent.$options.componentName;
+                }
+              }
+              if (parent) {
+                parent.$emit.apply(parent, [eventName].concat(params));
+              }
+            }
+        },
+    })
+    new Vue({
+        el: "#app",
+        data() {
+            return {
+                price: ""
+            }
+        },
+        created() {
+            setTimeout(() => {
+                this.price = 1100;
+            }, 1000);
+        },
+        methods: {
         },
     })
 </script>
